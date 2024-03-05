@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Protocol version="1.6">
+  <Plate id="Plate:0001">
+    <AcquisitionDate>2019-09-03T19:04:23Z</AcquisitionDate>
+    <Description>2019-09-03_iPSC_SYTO24_Phalloidin-AF568</Description>
+    <User email="antony.cschan@caltech.edu">Antony Chan</User>
+    <Format manufacturer="Greiner" model="655801">UV-STAR MICROPLATE, 96 WELL, COC, F-BOTTOM</Format>
+    <Medium height="3" refractiveIndex="1.33" unit="millimeter"/>
+    <!-- This is where the <Well> tag is going to be inserted. Number of tags ranges from 1 to 96. -->
+    <Well ID="Well:0" Column="0" Row="0">
+      <WellSample Index="0" name="FPM">
+        <External filename="/tmp/00-intensity.png" channel="Intensity"/>
+        <External filename="/tmp/00-phase.png" channel="Phase"/>
+        <External filename="/tmp/00-brightfield.png" channel="Brightfield"/>
+        <External filename="/tmp/00-egfp06.png" channel="EGFP" zlayer="6"/>
+        <External filename="/tmp/00-txred08.png" channel="TXRED" zlayer="8"/>
+      </WellSample>
+    </Well>
+    <Well ID="Well:1" Column="1" Row="0">
+      <WellSample Index="2" name="FPM">
+        <External filename="/tmp/01-intensity.png" channel="Intensity"/>
+        <External filename="/tmp/01-phase.png" channel="Phase"/>
+        <External filename="/tmp/01-brightfield.png" channel="Brightfield"/>
+        <External filename="/tmp/01-egfp05.png" channel="EGFP" zlayer="5"/>
+        <External filename="/tmp/01-txred07.png" channel="TXRED" zlayer="7"/>
+      </WellSample>
+    </Well>
+  </Plate>
+  <!-- light source referenced to the LEDMatrix/Wavelength tag -->
+  <Channel ref="FPM">
+    <Stage z="180" unit="micrometer"/>
+    <!-- Effective exposure time = exposure * stack -->
+    <Camera exposure="30.0" unit="millisecond" gain="1" stack="1"/>
+  </Channel>
+  <!-- light source referenced to the Laser/Wavelength tag -->
+  <Channel ref="Fluorescence">
+    <Stage zmin="130" zmax="230" zsize="11" unit="micrometer"/>
+    <!-- Effective exposure time = exposure * stack -->
+    <Camera exposure="90.00" unit="millisecond" gain="3" stack="10"/>
+  </Channel>
+  <!-- Planned to have one more <Channel ref="ETHD-1"> -->
+  <Output omexml="off" hdf5="off"/>
+  <LEDMatrix purpose="FPM" height="35" pitch="3" unit="millimeter">
+    <!-- emission wavelength is implied to be equal to excitation wavelength -->
+    <Wavelength id="Intensity" excitation="532" unit="nanometer" defaultColor="0xffffff"/>
+    <Wavelength id="Phase" excitation="532" unit="nanometer" defaultColor="0xffffff"/>
+    <Wavelength id="Brightfield" excitation="532" unit="nanometer" defaultColor="0xffffff"/>
+  </LEDMatrix>
+  <Laser purpose="Fluorescence" power="32" max="32">
+    <Wavelength id="EGFP" excitation="465" emission="532" unit="nanometer" defaultColor="0x00ff00"/>
+    <Wavelength id="TXRED" excitation="553" emission="617" unit="nanometer" defaultColor="0xff0000"/>
+  </Laser>
+  <!-- Default camera parameters -->
+  <FPGA/>
+</Protocol>

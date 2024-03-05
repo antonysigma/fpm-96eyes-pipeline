@@ -1,0 +1,6 @@
+[wrap-git]
+url = https://github.com/ReneNyffenegger/cpp-base64.git
+revision = 82147d6d89636217b870f54ec07ddd3e544d5f69
+depth = 1
+
+patch_directory = cpp-base64

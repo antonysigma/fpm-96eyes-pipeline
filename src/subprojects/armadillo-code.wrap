@@ -1,0 +1,5 @@
+[wrap-git]
+url = https://gitlab.com/conradsnicta/armadillo-code.git
+revision = 298c0cfc13cc3dc481c7d6c6ceeff626f4a7e208
+
+patch_directory = armadillo-code
