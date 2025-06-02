@@ -1,5 +1,6 @@
 wavevector_utils_dep = declare_dependency(
   include_directories: 'inc',
+  sources: 'src/wavevector_utility.cpp',
   dependencies: armadillo_dep,
 )
 

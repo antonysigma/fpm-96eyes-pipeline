@@ -1,2 +1,4 @@
-build
+build/
 subprojects/*/
+test-data/*.hdf5
+test-data/*.h5

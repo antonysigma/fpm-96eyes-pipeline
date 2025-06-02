@@ -11,7 +11,7 @@ enum axis_t { X = 0, Y = 1 };
 
 SCENARIO("Can find wavevector by fixed-point iterations") {
     constexpr auto n_leds = 49;
-    wavevector_class wavevector_engine{n_leds};
+    WavevectorOverMeniscus wavevector_engine{n_leds};
 
     GIVEN("LED xy coordinates") {
         wavevector_engine.led_position = {
@@ -46,19 +46,16 @@ SCENARIO("Can find wavevector by fixed-point iterations") {
                 wavevector_engine.wavelength = 533e-9;
                 wavevector_engine.zeropad_factor = 2;
 
-                const auto offset = wavevector_engine.get_offset(1);
+                const auto offset = wavevector_engine.getOffset(1);
                 REQUIRE(offset.is_finite());
 
-                REQUIRE(offset(X) >= 0);
                 REQUIRE(std::abs(static_cast<int32_t>(offset(X)) - tile_width / 2) <= 20);
-
-                REQUIRE(offset(Y) >= 0);
                 REQUIRE(std::abs(static_cast<int32_t>(offset(Y)) - tile_width / 2) <= 20);
 
                 AND_THEN("Valid wavevector values") {
                     arma::umat all_offset(2, n_leds);
                     for (auto i = 0; i < n_leds; i++) {
-                        all_offset.col(i) = wavevector_engine.get_offset(i);
+                        all_offset.col(i) = wavevector_engine.getOffset(i);
                     }
 
                     REQUIRE(all_offset.is_finite());
