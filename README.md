@@ -95,10 +95,10 @@ Each subfolder contains a standalone functionality of the reconstruction App. We
 don't have a global `source/` folder; each sub-folder has their standalone
 source folder `src/`, header files `inc/`, and test logic `tests/`.
 
-- `algorithms/`: image processing pipelines written in Halide language,
+- `algorithms/`: image processing pipelines written in [Halide language](https://doi.org/10.1145/3150211),
   potentially GPU-accelerated;
 
-- `common/`: shared data structure, memory aligned to efficient data access;
+- `common/`: shared data structure, memory aligned for efficient data access;
 
 - `wavevector_calibration/`: air-to-liquid meniscus compensating oblique illumination angle estimation;
 
@@ -149,3 +149,9 @@ To learn about the AcademicTorrent initiative, please read the white papers at
   Learning (CiML) Workshop, 2016, http://arxiv.org/abs/1603.04395.
 
 - https://academictorrents.com/docs/about.html
+
+## Citations
+
+A.C.S. Chan, J Kim, A Pan, H Xu, D Nojima, C Hale, S Wang, C Yang, “Parallel
+Fourier ptychographic microscopy for high-throughput screening with 96 cameras
+(96 Eyes)” Scientific Reports 9, 11114 (2019). http://dx.doi.org/10.1038/s41598-019-47146-z
