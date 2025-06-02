@@ -43,7 +43,7 @@ raw2phase(cx_fcube_t& raw) {
 int
 main() {
     // Load data
-    constexpr char filename[] = (HDF5_FILE_PATH);
+    constexpr char filename[]{HDF5_FILE_PATH};
     auto file = File(filename, File::ReadOnly);
 
     constexpr int well_id = 5;
