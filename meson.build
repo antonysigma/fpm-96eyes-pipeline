@@ -17,7 +17,7 @@ add_project_arguments([
   '-Xcompiler=-Wno-pedantic',
 ], language: 'cuda')
 
-subdir('common')
+subdir('wavevector-calibration')
 subdir('storage')
 subdir('algorithms')
 
