@@ -48,6 +48,8 @@ test_fluorescence_exe = executable('test_fluorescence',
     ],
 )
 
+if get_option('has_caltech_data')
+
 #test('FPM data format', test_hdf5_exe)
 test('Autofocus algorithm', test_autofocus_exe)
 test('Phase channel tile stitching', test_phase_exe)
@@ -62,3 +64,9 @@ test('Fluorescence channel RGB conversion', test_fluorescence_exe)
 #    ],
 #    protocol: 'tap',
 #)
+
+else
+
+warning('Skipping validation of image processing algorithms. Please request the raw data from Caltech, or contribute a mock test.')
+
+endif
