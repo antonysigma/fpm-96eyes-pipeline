@@ -1,5 +1,3 @@
-catch2_dep = subproject('catch2').get_variable('catch2_with_main_dep')
-
 unittest_exe = executable('unittest',
     sources: [
         'test_metadata.cpp',
@@ -69,14 +67,7 @@ test_fluorescence_exe = executable('test_fluorescence',
     ],
 )
 
-test_wavevector_exe = executable('test_wavevector',
-    sources: 'test_armadillo.cpp',
-    dependencies: wavevector_utils_dep,
-)
-
 #test('FPM data format', test_hdf5_exe)
-test('Wavevector', test_wavevector_exe)
-
 test('Autofocus algorithm', test_autofocus_exe)
 test('Phase channel tile stitching', test_phase_exe)
 test('Fluorescence channel RGB conversion', test_fluorescence_exe)

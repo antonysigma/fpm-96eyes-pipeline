@@ -11,6 +11,7 @@ cxxopts_dep = subproject('cxxopts').get_variable('cxxopts_dep')
 pugixml_dep = subproject('pugixml').get_variable('pugixml_dep')
 armadillo_dep = subproject('armadillo-code').get_variable('armadillo_dep')
 mpi_dep = dependency('mpi', language: 'cpp')
+catch2_dep = subproject('catch2').get_variable('catch2_with_main_dep')
 
 # Do not warn about non-CUDA pragma statements
 add_project_arguments([

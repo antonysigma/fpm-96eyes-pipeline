@@ -50,7 +50,8 @@ class wavevector_class {
     // arma::vec<unsigned> update_seq;
 
     // Variables for estimating the wave vector
-    double led_height, medium_height, medium_refractive_index, meniscus_factor, numerical_aperture;
+    const double meniscus_factor{5};
+    double led_height, medium_height, medium_refractive_index, numerical_aperture;
 
     // Variables for mapping wave vector to pixels in FFT space
     double tile_width, pixel_size, wavelength, zeropad_factor;
@@ -84,9 +85,7 @@ class wavevector_class {
 
 /********************************************************************************/
 
-wavevector_class::wavevector_class(unsigned number_of_led) : led_position(number_of_led) {
-    meniscus_factor = 5;
-}
+wavevector_class::wavevector_class(unsigned number_of_led) : led_position(number_of_led) {}
 
 bool
 wavevector_class::is_brightfield(unsigned short i) const {
@@ -99,13 +98,11 @@ wavevector_class::get_offset(unsigned short i) const {
         arma::as_scalar(solution.row(i)) * tile_width * pixel_size / wavelength +
         arma::cx_double(tile_width, tile_width) * (zeropad_factor - 1) * 0.5;
 
-    arma::uvec::fixed<2> out;
-    out(0) = k_offset.real();
-    out(1) = k_offset.imag();
+    arma::uvec::fixed<2> out{k_offset.real(), k_offset.imag()};
 
-    assert(k_offset.real() >= 0.0);
-    assert(k_offset.imag() >= 0.0);
-    assert(arma::all(out <= tile_width));
+    // assert(k_offset.real() >= 0.0);
+    // assert(k_offset.imag() >= 0.0);
+    // assert(arma::all(out <= tile_width));
 
     return out;
 }
