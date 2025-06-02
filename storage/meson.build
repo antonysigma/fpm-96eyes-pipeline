@@ -17,12 +17,6 @@ fpm_datafile_dep = declare_dependency(
   ],
 )
 
-metadata_parser_dep = declare_dependency(
-  include_directories: '.',
-  sources: 'metadata-parser.cpp',
-  dependencies: pugixml_dep,
-)
-
 save_xml_raw_dep = declare_dependency(
   include_directories: '.',
   sources: 'save_xml_raw.cpp',

@@ -1,22 +1,3 @@
-unittest_exe = executable('unittest',
-    sources: [
-        'test_metadata.cpp',
-    ],
-    cpp_args: [
-        # Needed for define_extern and symload
-        '-fPIC',
-        '-DTEST_TILE_SIZE=@0@'.format(tile_size),
-        '-DREGISTER_XML="@0@"'.format(register_xml_path),
-        '-DIMAGE_URL_XML="@0@"'.format(image_url_xml_path),
-    ],
-    dependencies: [
-        catch2_dep,
-        halide_runtime_dep,
-        armadillo_dep,
-        metadata_parser_dep,
-    ],
-)
-
 test_autofocus_exe = executable('test_autofocus',
     sources: [
         'test_autofocus.cpp',
@@ -81,13 +62,3 @@ test('Fluorescence channel RGB conversion', test_fluorescence_exe)
 #    ],
 #    protocol: 'tap',
 #)
-
-test('XML metadata decoding',
-    unittest_exe,
-    suite: 'metadata',
-    args: [
-        '-r', 'tap',
-        '[metadata]',
-    ],
-    protocol: 'tap',
-)

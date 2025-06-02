@@ -102,6 +102,8 @@ source folder `src/`, header files `inc/`, and test logic `tests/`.
 
 - `wavevector_calibration/`: air-to-liquid meniscus compensating oblique illumination angle estimation;
 
+- `metadata/`: Imaging environment parameters serialization in XML;
+
 - `storage/`: 96-Eyes file format specifications, and encode/decode logic;
 
 - `subprojects/`: 3rd party C/C++ libraries;
