@@ -1,4 +1,4 @@
-project('u96eyes', 'cpp', 'cuda', 'c',
+project('u96eyes', 'cpp', 'c',
   version : '0.1',
   default_options : [
     'buildtype=debugoptimized',
