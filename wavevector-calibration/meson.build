@@ -6,6 +6,7 @@ wavevector_utils_dep = declare_dependency(
 
 test_wavevector_exe = executable('test_wavevector',
     sources: 'tests/test-wavevector.cpp',
+    include_directories: common_inc,
     dependencies: [
       wavevector_utils_dep,
       catch2_dep,

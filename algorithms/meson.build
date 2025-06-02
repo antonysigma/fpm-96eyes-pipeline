@@ -4,8 +4,14 @@ halide_codegen_dep = halide_toolchain.get_variable('halide_generator_dep')
 halide_library_path = halide_toolchain.get_variable('halide_library_path')
 halide_runtime_dep = halide_toolchain.get_variable('halide_runtime_dep')
 
+halide_fft_inc = subproject('halide-fft').get_variable('halide_fft_inc')
+
 halide_codegen_exe = executable('codegen',
-    include_directories: '.',
+    include_directories: [
+        '.',
+        halide_fft_inc,
+        common_inc,
+    ],
     cpp_args: [
         '-Wno-unused-parameter',
         '-Wno-unused-function',

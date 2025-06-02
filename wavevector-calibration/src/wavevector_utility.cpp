@@ -1,5 +1,6 @@
-#include <cassert>
 #include "wavevector_utility.hpp"
+
+#include <cassert>
 
 namespace {
 
@@ -39,9 +40,10 @@ find_k(const arma::vec& x, float h, float t, float n, arma::vec& k) {
     return true;
 }
 
-}
+}  // namespace
 
-WavevectorOverMeniscus::WavevectorOverMeniscus(unsigned number_of_led) : led_position(number_of_led) {}
+WavevectorOverMeniscus::WavevectorOverMeniscus(unsigned number_of_led)
+    : led_position(number_of_led) {}
 
 bool
 WavevectorOverMeniscus::isBrightfield(unsigned short i) const {

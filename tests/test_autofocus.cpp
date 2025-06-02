@@ -62,7 +62,7 @@ main() {
     arma::Cube<uint16_t> image(width, height, zsize);
 
     // Load data
-    constexpr char filename[] = (HDF5_FILE_PATH);
+    constexpr char filename[]{HDF5_FILE_PATH};
     auto file = File(filename, File::ReadOnly);
 
     std::cout << "Reading z-stack..." << std::endl;

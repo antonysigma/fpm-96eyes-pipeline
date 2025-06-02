@@ -54,7 +54,7 @@ decodeImage(slice_t egfp_buffer, slice_t txred_buffer) {
 int
 main() {
     // Load data
-    constexpr char filename[] = (HDF5_FILE_PATH);
+    constexpr char filename[]{HDF5_FILE_PATH};
     auto file = File(filename, File::ReadOnly);
 
     using namespace arma;

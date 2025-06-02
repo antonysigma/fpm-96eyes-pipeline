@@ -1,13 +1,8 @@
 #include <algorithm>
 #include <catch2/catch_test_macros.hpp>
 
+#include "types.h"
 #include "wavevector_utility.hpp"
-
-namespace {
-
-enum axis_t { X = 0, Y = 1 };
-
-}
 
 SCENARIO("Can find wavevector by fixed-point iterations") {
     constexpr auto n_leds = 49;
@@ -49,8 +44,11 @@ SCENARIO("Can find wavevector by fixed-point iterations") {
                 const auto offset = wavevector_engine.getOffset(1);
                 REQUIRE(offset.is_finite());
 
-                REQUIRE(std::abs(static_cast<int32_t>(offset(X)) - tile_width / 2) <= 20);
-                REQUIRE(std::abs(static_cast<int32_t>(offset(Y)) - tile_width / 2) <= 20);
+                {
+                    using namespace types;
+                    REQUIRE(std::abs(static_cast<int32_t>(offset(X)) - tile_width / 2) <= 20);
+                    REQUIRE(std::abs(static_cast<int32_t>(offset(Y)) - tile_width / 2) <= 20);
+                }
 
                 AND_THEN("Valid wavevector values") {
                     arma::umat all_offset(2, n_leds);

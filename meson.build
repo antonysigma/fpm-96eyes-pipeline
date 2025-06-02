@@ -17,11 +17,22 @@ add_project_arguments([
   '-Xcompiler=-Wno-pedantic',
 ], language: 'cuda')
 
+# Common data structures shared among modules
+subdir('common')
+
+# Wavevector estimation over a curved air-to-liquid interface (i.e. meniscus)
 subdir('wavevector-calibration')
+
+# File formats
 subdir('metadata')
 subdir('storage')
+
+# Image processing algorithms, potentially GPU-accelerated.
 subdir('algorithms')
 
+# Test logic
 subdir('test-data')
 subdir('tests')
+
+# End user application
 subdir('apps')
