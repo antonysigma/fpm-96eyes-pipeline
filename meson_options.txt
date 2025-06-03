@@ -1,0 +1,2 @@
+option('has_caltech_data', type: 'boolean', value: false,
+    description: 'Whether the developer has downloaded the Caltech 96-Eyes raw data to path "test-data/"')

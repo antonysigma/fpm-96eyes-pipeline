@@ -20,6 +20,7 @@ halide_codegen_exe = executable('codegen',
         'src/autofocus_generator.cpp',
         'src/fluorescence_generator.cpp',
         'src/phase_generator.cpp',
+        'src/fpm-epry_generator.cpp',
     ],
     dependencies: [
         halide_codegen_dep,
@@ -29,7 +30,11 @@ halide_codegen_exe = executable('codegen',
 halide_pipelines = [
     {'name': 'plls'},
     {'name': 'get_phase'},
-    {'name': 'raw2bgr'},
+    {'name': 'raw2bgr'}, {
+        'name': 'fpm_epry',
+        'auto_schedule': false,
+        'specify_tile_size': true,
+    },
 ]
 
 tile_size = 256
