@@ -27,12 +27,11 @@ subdir('wavevector-calibration')
 subdir('metadata')
 subdir('storage')
 
+# Test data captured from the 96-Eyes project
+subdir('test-data')
+
 # Image processing algorithms, potentially GPU-accelerated.
 subdir('algorithms')
-
-# Test logic
-subdir('test-data')
-subdir('tests')
 
 # End user application
 subdir('apps')

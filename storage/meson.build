@@ -5,8 +5,10 @@ hdf5_parallel_dep = cxx.find_library('hdf5_openmpi')
 
 base64_dep = subproject('cpp-base64').get_variable('base64_dep')
 
+storage_inc = include_directories('.')
+
 fpm_datafile_dep = declare_dependency(
-  include_directories: '.',
+  include_directories: storage_inc,
   compile_args: [
     '-DH5_HAVE_PARALLEL',
   ],
@@ -18,7 +20,7 @@ fpm_datafile_dep = declare_dependency(
 )
 
 save_xml_raw_dep = declare_dependency(
-  include_directories: '.',
+  include_directories: storage_inc,
   sources: 'save_xml_raw.cpp',
   dependencies: [
     dependency('zlib'),
@@ -27,7 +29,7 @@ save_xml_raw_dep = declare_dependency(
 )
 
 read_slice_dep = declare_dependency(
-  include_directories: '.',
+  include_directories: storage_inc,
   sources: 'read-slice.cpp',
   dependencies: [
     highfive_dep,

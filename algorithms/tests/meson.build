@@ -14,7 +14,6 @@ test_autofocus_exe = executable('test_autofocus',
 )
 
 test_phase_exe = executable('test_phase',
-    include_directories: '../storage',
     sources: [
         'test_phase.cpp',
         halide_generated_bin['get_phase'],
@@ -30,9 +29,6 @@ test_phase_exe = executable('test_phase',
 )
 
 test_fluorescence_exe = executable('test_fluorescence',
-    include_directories: [
-        '../storage',
-    ],
     sources: [
         'test_fluorescence.cpp',
         halide_generated_bin['plls'],

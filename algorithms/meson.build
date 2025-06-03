@@ -8,7 +8,7 @@ halide_fft_inc = subproject('halide-fft').get_variable('halide_fft_inc')
 
 halide_codegen_exe = executable('codegen',
     include_directories: [
-        '.',
+        'inc',
         halide_fft_inc,
         common_inc,
     ],
@@ -17,9 +17,9 @@ halide_codegen_exe = executable('codegen',
         '-Wno-unused-function',
     ],
     sources: [
-        'autofocus_generator.cpp',
-        'fluorescence_generator.cpp',
-        'phase_generator.cpp',
+        'src/autofocus_generator.cpp',
+        'src/fluorescence_generator.cpp',
+        'src/phase_generator.cpp',
     ],
     dependencies: [
         halide_codegen_dep,
@@ -77,3 +77,5 @@ foreach p : halide_pipelines
 
     alias_target('halide_' + p['name'], halide_generated_bin[p['name']])
 endforeach
+
+subdir('tests')
