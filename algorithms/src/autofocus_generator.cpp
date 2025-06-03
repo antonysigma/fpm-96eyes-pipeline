@@ -99,8 +99,7 @@ autofocus::generate() {
         RDom r(0, width, 0, height);
         Mean(z) = sum(L(r.x, r.y, z)) / pixel_count;
         const Expr delta = L(r.x, r.y, z) - Mean(z);
-        Half_sigma(z) =
-            sqrt(sum(delta * delta) / pixel_count / 4);
+        Half_sigma(z) = sqrt(sum(delta * delta) / pixel_count / 4);
 
         // Compute spatial frequency density (SFD)
         Func magnitude;

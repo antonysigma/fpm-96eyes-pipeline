@@ -56,7 +56,7 @@ main() {
     phase.save(output_filename, arma::pgm_binary);
     std::cout << "Saved to " << output_filename << std::endl;
 
-    //#define RUN_BENCHMARK
+    // #define RUN_BENCHMARK
 #ifdef RUN_BENCHMARK
     {
         const int N = wsize;

@@ -101,7 +101,7 @@ main() {
         std::cout << "Saved to " << output_filename << std::endl;
     }
 
-//#define RUN_BENCHMARK
+// #define RUN_BENCHMARK
 #ifdef RUN_BENCHMARK
     {
         std::cout << "Running benchmark of " << zsize << " focal planes by " << wsize
