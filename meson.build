@@ -30,6 +30,9 @@ subdir('storage')
 # Test data captured from the 96-Eyes project
 subdir('test-data')
 
+# CUDA FFT function wrapper
+subdir('fft-wrapper')
+
 # Image processing algorithms, potentially GPU-accelerated.
 subdir('algorithms')
 
