@@ -184,6 +184,10 @@ fft2C2C(const T& input, const int width, bool is_fwd = true, std::string&& label
     fft2_internal.define_extern(extern_func, {input_func}, halide_type_of<float>(), n_dim,
                                 NameMangling::Default, DeviceAPI::CUDA);
 
+    assert(input_func.dimensions() == 3);
+    fft2_internal.function().extern_definition_proxy_expr() =
+        input_func(0, 0, 0) + input_func(1, width - 1, width - 1);
+
     ComplexFunc transformed{"transformed"};
     transformed(x, y, _) = ComplexExpr{fft2_internal(0, x, y, _), fft2_internal(1, x, y, _)};
 
