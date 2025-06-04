@@ -8,6 +8,8 @@
 namespace algorithms {
 using namespace Halide;
 
+enum fpm_mode_t : int32_t { AUTO_BRIGHTNESS = 0, PUPIL_RECOVERY = 1 };
+
 /** Simulate the low-resolution image */
 class FPMEpry : public Generator<FPMEpry> {
     Input<Buffer<const float, 3>> low_res{"low_res"};
@@ -19,9 +21,8 @@ class FPMEpry : public Generator<FPMEpry> {
     Output<Buffer<float, 3>> high_res_new{"high_res_new"};
     Output<Buffer<float, 3>> pupil_new{"pupil_new"};
 
-    GeneratorParam<int32_t> n_illumination{"n_illumination", 3, 9, 49};
-    GeneratorParam<int32_t> n_unroll{"n_unroll", 1, 1, 30};
-    GeneratorParam<int32_t> n_normalize{"n_normalize", 0, 0, 5};
+    GeneratorParam<uint32_t> n_illumination{"n_illumination", 3, 9, 49};
+    GeneratorParam<int32_t> fpm_mode{"fpm_mode", PUPIL_RECOVERY, AUTO_BRIGHTNESS, PUPIL_RECOVERY};
     GeneratorParam<int32_t> tile_size{"tile_size", 128, 0, 256};
 
     RDom r;

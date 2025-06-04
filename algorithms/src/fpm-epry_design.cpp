@@ -99,92 +99,127 @@ updatePupil(const ComplexFunc& current_pupil, const ComplexFunc& f_difference,
 namespace algorithms {
 void
 FPMEpry::design() {
-    assert(uint32_t(n_unroll) >= n_normalize);
-
     const int width = tile_size;
 
-    const int32_t n_normalize_iter = int32_t(n_illumination) * n_normalize;
-    const int32_t n_unroll_iter = int32_t(n_illumination) * n_unroll;
-
     {
-        high_res.resize(n_unroll_iter + 1);
+        // Initialize the high resolution image in Fourier domain.
+        high_res.resize(n_illumination + 1);
         ComplexFunc h{"high_res"};
         h(x, y) = {high_res_prev(0, x, y), high_res_prev(1, x, y)};
         high_res.front() = std::move(h);
     }
 
     {
-        // The || x ||_00, aka peak value of the Fourier spectrum is the DC term.
+        // The || x ||_00, aka peak value of the Fourier spectrum is located at the center.
         const Expr center_x = width;
         const Expr center_y = width;
         beta() = abs(high_res.front()(center_x, center_y));
     }
 
     {
-        pupil.resize(1);
+        // Initial the pupil function.
+        pupil.reserve(fpm_mode == AUTO_BRIGHTNESS ? 1 : n_illumination);
         ComplexFunc p{"pupil"};
         p(x, y) = {pupil_prev(0, x, y), pupil_prev(1, x, y)};
-        pupil.front() = std::move(p);
+        pupil.emplace_back(std::move(p));
     }
 
-    r = RDom(0, width, 0, width);
+    // Cropbox's width and height
+    r = RDom(0, width, 0, width, "r");
+
+    // Compute the max value of the pupil function.
     std::tie(alpha, sumsq_alpha) = normInf(pupil.front(), r, "alpha");
 
+    // Define the main FPM Maths.
     const auto fpmIter = [&](const ComplexFunc& high_res_prev, const ComplexFunc& current_pupil,
                              const int32_t illumination_idx)
         -> std::tuple<ComplexFunc, ComplexFunc, ComplexFunc, Func, Func, Func, Func, ComplexFunc,
                       Func> {
         using linear_ops::fft2C2C;
 
+        // Perform oblique illumination. Propagate the wavefront through the
+        // imaging lens with a circular aperture.
         const auto f_estimated =
             generateLR(high_res_prev, k_offset, illumination_idx, current_pupil, width);
 
+        // Simulate the low resolution image in the object plane.
         ComplexFunc estimated;
         Func f_estimated_interleaved;
         Func ifft2;
         std::tie(estimated, ifft2, f_estimated_interleaved) =
             fft2C2C(f_estimated, width, INVERSE, "f_estimated_interleaved");
 
+        // Replace the intensity.
         const auto [replaced, magn_low_res] =
             replaceIntensity(estimated, low_res, illumination_idx);
 
+        // Simulate the Fourier plane.
         ComplexFunc f_replaced;
         Func fft2;
         Func replaced_interleaved;
         std::tie(f_replaced, fft2, replaced_interleaved) =
             fft2C2C(replaced, width, FORWARD, "replaced_interleaved");
 
+        // Update the high resolution image in Fourier domain via backward
+        // propagation.
         ComplexFunc f_difference{"f_difference"};
         f_difference(x, y) = f_replaced(x, y) - f_estimated(x, y);
 
         const auto [this_high_res, delta] = updateHR(high_res_prev, f_difference, current_pupil,
                                                      k_offset, alpha(0), illumination_idx, width);
 
+        // Return all intermediate (optical) planes for GPU experts to tune the
+        // GPU performance.
         return {this_high_res,        f_difference, f_estimated, f_estimated_interleaved,
                 replaced_interleaved, ifft2,        fft2,        delta,
                 magn_low_res};
     };
 
-    f_estimated_interleaved.resize(n_unroll_iter);
-    replaced_interleaved.resize(n_unroll_iter);
-    fft2.resize(n_unroll_iter);
-    ifft2.resize(n_unroll_iter);
-    delta.resize(n_unroll_iter);
-    magn_low_res.resize(n_unroll_iter);
+    // Functions in Halide language are not buffers; they are immutable. This is
+    // analogous to optical wavefront propagation without mirrors. So, one
+    // cannot simply "update" a small region of interest of the high resolution
+    // image in the Fourier domain. One must always describe a new (Fourier)
+    // plane and define the values inside and outside the ROIs. Halide compiler
+    // smartly figures out which direct copies can be skipped.
+    f_estimated_interleaved.resize(n_illumination);
+    replaced_interleaved.resize(n_illumination);
+    fft2.resize(n_illumination);
+    ifft2.resize(n_illumination);
+    delta.resize(n_illumination);
+    magn_low_res.resize(n_illumination);
 
-    for (int32_t i = 0; i < n_normalize_iter; i++) {
-        using std::ignore;
-        std::tie(high_res[i + 1], ignore, ignore, f_estimated_interleaved[i],
-                 replaced_interleaved[i], ifft2[i], fft2[i], delta[i], magn_low_res[i]) =
-            fpmIter(high_res[i], pupil.back(), i % n_illumination);
+    f_difference.reserve(n_illumination);
+
+    if (fpm_mode == AUTO_BRIGHTNESS) {
+        // Lock the pupil function. Perform FPM iterations for all low-res
+        // images. Pupil update steps are defined and discarded on the fly.
+
+        for (uint32_t i = 0; i < n_illumination; i++) {
+            using std::ignore;
+            const auto& original_pupil = pupil.front();
+
+            std::tie(high_res.at(i + 1), ignore, ignore, f_estimated_interleaved[i],
+                     replaced_interleaved[i], ifft2[i], fft2[i], delta[i], magn_low_res[i]) =
+                fpmIter(high_res[i], original_pupil, i % n_illumination);
+        }
+
+        const auto& most_recent_high_res = high_res.back();
+        high_res_new(i, x, y) =
+            mux(i, {most_recent_high_res(x, y).re(), most_recent_high_res(x, y).im()});
+
+        // Fill with zeros to indicate no action.
+        pupil_new(i, x, y) = 0.0f;
+        return;
     }
 
-    for (int32_t i = n_normalize_iter; i < n_unroll_iter; i++) {
+    // else fpm_mode == PUPIL_RECOVERY
+    for (uint32_t i = 0; i < n_illumination; i++) {
         ComplexFunc f_diff;
         ComplexFunc f_estimated;
         std::tie(high_res.at(i + 1), f_diff, f_estimated, f_estimated_interleaved[i],
                  replaced_interleaved[i], ifft2[i], fft2[i], delta[i], magn_low_res[i]) =
             fpmIter(high_res[i], pupil.back(), i % n_illumination);
+
         pupil.emplace_back(updatePupil(pupil.back(), f_diff, f_estimated, beta()));
         f_difference.emplace_back(std::move(f_diff));
     }
