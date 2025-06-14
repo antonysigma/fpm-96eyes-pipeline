@@ -2,7 +2,7 @@
 #include "complex.h"
 namespace {
 
-#include "linear_ops.hpp"
+#include "linear_ops.h"
 
 using namespace Halide;
 

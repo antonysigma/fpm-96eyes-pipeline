@@ -1,11 +1,12 @@
 #include "Halide.h"
 #include "constants.hpp"
+#include "linear_ops.h"
+#include "vars.hpp"
 
 namespace {
 
-#include "linear_ops.hpp"
-using namespace Halide;
 
+using namespace Halide;
 using vars::c;
 using vars::x;
 using vars::y;

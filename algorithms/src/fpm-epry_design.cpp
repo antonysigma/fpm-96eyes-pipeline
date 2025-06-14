@@ -1,6 +1,6 @@
 #include "constants.hpp"
 #include "fpm-epry_generator.h"
-#include "linear_ops.hpp"
+#include "linear_ops.h"
 #include "types.h"
 #include "vars.hpp"
 

@@ -1,4 +1,4 @@
-halide_toolchain = subproject('halide-@0@-@1@'.format(build_machine.cpu_family(), build_machine.system()))
+halide_toolchain = subproject('halide-18.x')
 
 halide_codegen_dep = halide_toolchain.get_variable('halide_generator_dep')
 halide_library_path = halide_toolchain.get_variable('halide_library_path')
@@ -22,6 +22,8 @@ halide_codegen_exe = executable('codegen',
         'src/phase_generator.cpp',
         'src/fpm-epry_design.cpp',
         'src/fpm-epry_impl.cpp',
+        'src/high-res-init_generator.cpp',
+        'src/linear_ops.cpp',
     ],
     dependencies: [
         halide_codegen_dep,
@@ -77,7 +79,7 @@ foreach p : halide_pipelines
             halide_codegen_exe,
             '-o', meson.current_build_dir(),
             '-g', p['name'],
-            '-e', 'static_library,h,html',
+            '-e', 'static_library,h,conceptual_stmt_html',
         ] + halide_codegen_args,
     )}
 
